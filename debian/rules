@@ -5,7 +5,9 @@
 export DH_VERBOSE=1
 
 export JAVA_HOME=/usr/lib/jvm/default-java
-export sbtopts="$sbtopts: -Dsbt.ivy.home=target/.ivy2 -Divy.home=target/.ivy2"
+
+#requires sbt be configured storing cache in the same location
+export IVY_HOME=/var/cache/.ivy2
 
 %:
 	dh $@
@@ -16,13 +18,14 @@ get-orig-source:
 override_dh_auto_build:
 	dh_auto_build
 	cd framework
+	#java -Dsbt.ivy.home=target/.ivy2 -Divy.home=target/.ivy2 -jar ${SBT_HOME}/bin/sbt-launch.jar update
 	sbt update
 
 override_dh_auto_clean:
 	dh_auto_clean
-	rm -rf ${sbt.ivy.home}
+	rm -rf ${IVY_HOME}
 
 override_dh_install:
 	dh_install
-#	ln -s <target> <linkname>
-#	install -m0755 <surce> <target>
+	mkdir -p debian/playframework/var/cache/.ivy2
+	cp -r ${IVY_HOME} debian/playframework${IVY_HOME}
