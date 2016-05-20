@@ -1,0 +1,29 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+export JAVA_HOME=/usr/lib/jvm/default-java
+export sbt.ivy.home=target/.ivy2
+export ivy.home=target/.ivy2
+
+%:
+	dh $@
+
+get-orig-source:
+	uscan --download-current-version --force-download --no-symlink --repack --compression xz
+
+override_dh_auto_build:
+	dh_auto_build
+	cd framework
+	sbt update
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf ${sbt.ivy.home}
+
+override_dh_install:
+	dh_install
+#	ln -s <target> <linkname>
+#	install -m0755 <surce> <target>
