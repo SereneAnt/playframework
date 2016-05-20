@@ -5,8 +5,7 @@
 export DH_VERBOSE=1
 
 export JAVA_HOME=/usr/lib/jvm/default-java
-export sbt.ivy.home=target/.ivy2
-export ivy.home=target/.ivy2
+export sbtopts="$sbtopts: -Dsbt.ivy.home=target/.ivy2 -Divy.home=target/.ivy2"
 
 %:
 	dh $@
